@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-const DISKS = 4;
+const DISKS = 3;
+const DISK_COLORS = Array.from({length: DISKS}, (_,i) => {
+  const hue = (i*360)/DISKS;
+  return `hsl(${hue}, 90%, 50%)`;
+})
 
 export default function App() {
   const [towers, setTowers] = useState([
@@ -72,7 +76,10 @@ export default function App() {
               <div
                 key={disk}
                 className="disk"
-                style={{ width: `${disk * 40}px` }}
+                style={{ 
+                  width: `${160*(disk)/DISKS}px`, //DISKS = 5 is too big already.  scale so max width is 160px
+                  backgroundColor: DISK_COLORS[disk-1]
+                }}
               />
             ))}
           </div>
