@@ -103,10 +103,21 @@
   position: absolute;
   width: 8px;
   height: 12px;
-  background: hsl(calc(360 * var(--i)), 80%, 60%);
   top: -20px;
-  left: calc(100% * random());
+  /* `left` and `background-color` are set inline from JSX for randomness. */
   animation: fall 3s linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0;
+  }
 }
 
 button {
