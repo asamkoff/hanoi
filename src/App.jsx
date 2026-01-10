@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./App.css";
 
 const DISKS = 2;
 const DISK_COLORS = Array.from({length: DISKS}, (_,i) => {
@@ -70,7 +71,6 @@ export default function App() {
 
   return (
     <div className="app">
-      <style>{css}</style>
       <h1>Towers of Hanoi</h1>
       <p>Moves: {moves}</p>
       {hasWon && (
@@ -78,7 +78,15 @@ export default function App() {
           <p className="win">You win!</p>
           <div className="confetti">
             {Array.from({ length: 60 }).map((_, i) => (
-              <span key={i} className="confetti-piece" />
+              <span
+                key={i}
+                className="confetti-piece"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  backgroundColor: `hsl(${Math.random() * 360}, 80%, 60%)`,
+                  animationDelay: `${Math.random() * 2}s`,
+                }}
+              />
             ))}
           </div>
         </>
@@ -110,77 +118,3 @@ export default function App() {
     </div>
   );
 }
-
-const css = `
-.app {
-  font-family: sans-serif;
-  text-align: center;
-  padding: 20px;
-}
-
-.towers {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin: 40px 0;
-}
-
-.tower {
-  position: relative;
-  width: 160px;
-  height: 220px;
-  border-bottom: 4px solid #444;
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column-reverse;
-  // align-items: center;
-}
-
-.tower.selected {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.rod {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 180px;
-  background: #555;
-}
-
-.disk {
-  position: relative;
-  height: 20px;
-  margin: 2px auto;
-  background: #4a90e2;
-  border-radius: 4px;
-}
-
-.confetti {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.confetti-piece {
-  position: absolute;
-  width: 8px;
-  height: 12px;
-  background: hsl(calc(360 * var(--i)), 80%, 60%);
-  top: -20px;
-  left: calc(100% * random());
-  animation: fall 3s linear infinite;
-}
-
-button {
-  padding: 8px 16px;
-  font-size: 16px;
-}
-`;
