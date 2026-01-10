@@ -1,10 +1,11 @@
 import { useState } from "react";
 
-const DISKS = 3;
+const DISKS = 2;
 const DISK_COLORS = Array.from({length: DISKS}, (_,i) => {
   const hue = (i*360)/DISKS;
   return `hsl(${hue}, 90%, 50%)`;
 })
+const WIN_TOWER_INDEX = 2;
 
 export default function App() {
   const [towers, setTowers] = useState([
@@ -14,8 +15,11 @@ export default function App() {
   ]);
   const [selected, setSelected] = useState(null);
   const [moves, setMoves] = useState(0);
+  const [hasWon, setHasWon] = useState(false);
 
   function handleTowerClick(towerIndex) {
+    if (hasWon) return;
+
     const tower = towers[towerIndex];
 
     // Select a disk
@@ -43,6 +47,11 @@ export default function App() {
       newTowers[to].push(disk);
       setTowers(newTowers);
       setMoves(moves + 1);
+
+      // Win condition
+      if (newTowers[WIN_TOWER_INDEX].length === DISKS) {
+        setHasWon(true);
+      }
     }
 
     setSelected(null);
@@ -56,6 +65,7 @@ export default function App() {
     ]);
     setMoves(0);
     setSelected(null);
+    setHasWon(false)
   }
 
   return (
@@ -63,6 +73,16 @@ export default function App() {
       <style>{css}</style>
       <h1>Towers of Hanoi</h1>
       <p>Moves: {moves}</p>
+      {hasWon && (
+        <>
+          <p className="win">You win!</p>
+          <div className="confetti">
+            {Array.from({ length: 60 }).map((_, i) => (
+              <span key={i} className="confetti-piece" />
+            ))}
+          </div>
+        </>
+      )}
 
       <div className="towers">
         {towers.map((tower, i) => (
@@ -77,7 +97,7 @@ export default function App() {
                 key={disk}
                 className="disk"
                 style={{ 
-                  width: `${160*(disk)/DISKS}px`, //DISKS = 5 is too big already.  scale so max width is 160px
+                  width: `${160*(disk)/DISKS}px`, 
                   backgroundColor: DISK_COLORS[disk-1]
                 }}
               />
@@ -137,6 +157,26 @@ const css = `
   margin: 2px auto;
   background: #4a90e2;
   border-radius: 4px;
+}
+
+.confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  background: hsl(calc(360 * var(--i)), 80%, 60%);
+  top: -20px;
+  left: calc(100% * random());
+  animation: fall 3s linear infinite;
 }
 
 button {
