@@ -77,7 +77,7 @@ export default function App() {
         <>
           <p className="win">You win!</p>
           <div className="confetti">
-            {Array.from({ length: 60 }).map((_, i) => (
+            {Array.from({ length: 100 }).map((_, i) => (
               <span
                 key={i}
                 className="confetti-piece"
