@@ -77,17 +77,38 @@ export default function App() {
         <>
           <p className="win">You win!</p>
           <div className="confetti">
-            {Array.from({ length: 100 }).map((_, i) => (
-              <span
-                key={i}
-                className="confetti-piece"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  backgroundColor: `hsl(${Math.random() * 360}, 80%, 60%)`,
-                  animationDelay: `${Math.random() * 2}s`,
-                }}
-              />
-            ))}
+            {Array.from({ length: 100 }).map((_, i) => {
+              const left = `${Math.random() * 100}%`;
+              const backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
+              const fall = 2 + Math.random() * 4; // 2s–6s fall duration
+              const spin = 0.5 + Math.random() * 2.5; // 0.5s–3s spin duration
+              const delay = Math.random() * 2; // 0s–2s start delay
+              const fallDir = "normal";;
+              const spinDir = Math.random() < 0.5 ? "normal" : "reverse";
+
+              return (
+                <span
+                  key={i}
+                  className="confetti-piece"
+                  style={{
+                    left,
+                    animationDelay: `${delay}s`,
+                    animationDirection: fallDir,
+                    '--fall-duration': `${fall}s`,
+                  }}
+                >
+                  <span
+                    className="confetti-spin"
+                    style={{
+                      animationDelay: `${delay}s`,
+                      animationDirection: spinDir,
+                      '--spin-duration': `${spin}s`,
+                      backgroundColor,
+                    }}
+                  />
+                </span>
+              );
+            })}
           </div>
         </>
       )}

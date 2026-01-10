@@ -105,8 +105,10 @@
   height: 12px;
   top: -20px;
   /* `left` and `background-color` are set inline from JSX for randomness. */
-  animation: fall 3s linear infinite;
+  display: block;
   will-change: transform, opacity;
+  /* outer element only handles vertical fall; spin is applied to inner child */
+  animation: fall var(--fall-duration, 3s) linear infinite;
 }
 
 @keyframes fall {
@@ -118,6 +120,20 @@
     transform: translateY(110vh) rotate(360deg);
     opacity: 0;
   }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* inner element handles rotation so transforms don't override each other */
+.confetti-spin {
+  width: 100%;
+  height: 100%;
+  display: block;
+  animation: spin var(--spin-duration, 1.5s) linear infinite;
+  transform-origin: 50% 50%;
 }
 
 button {
