@@ -17,6 +17,8 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [moves, setMoves] = useState(0);
   const [hasWon, setHasWon] = useState(false);
+  const [sessionBest, setSessionBest] = useState(null);
+  const [lastWinNewBest, setLastWinNewBest] = useState(false);
 
   function handleTowerClick(towerIndex) {
     if (hasWon) return;
@@ -47,11 +49,19 @@ export default function App() {
       newTowers[from].pop();
       newTowers[to].push(disk);
       setTowers(newTowers);
-      setMoves(moves + 1);
+      const newMoves = moves + 1;
+      setMoves(newMoves);
+      const newSessionBest = (sessionBest === null || newMoves < sessionBest);
+
 
       // Win condition
       if (newTowers[WIN_TOWER_INDEX].length === DISKS) {
         setHasWon(true);
+        // update session personal best (lower is better)
+        if (newSessionBest) {
+          setSessionBest(newMoves);
+        }
+        setLastWinNewBest(newSessionBest);
       }
     }
 
@@ -67,14 +77,18 @@ export default function App() {
     setMoves(0);
     setSelected(null);
     setHasWon(false)
+    setLastWinNewBest(false);
   }
 
   return (
     <div className="app">
       <h1>Towers of Hanoi</h1>
       <p>Moves: {moves}</p>
+      <p>Best so far: {sessionBest ?? '—'}</p>
+  
       {hasWon && (
         <>
+          {lastWinNewBest && <p className="new-best"><b>NEW PERSONAL BEST!</b></p>}
           <p className="win">You win!</p>
           <div className="confetti">
             {Array.from({ length: 100 }).map((_, i) => {
